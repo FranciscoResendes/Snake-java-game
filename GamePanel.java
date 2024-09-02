@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
     private boolean gameOver;
     private Snake snake;
+    private Apple apple;
     private char direction;
     private Thread gameThread;
 
@@ -20,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable{
         direction = 'R';
         gameOver = false;
         snake = new Snake(UNIT_SIZE);
+        apple = new Apple(UNIT_SIZE);
 
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
@@ -40,6 +42,10 @@ public class GamePanel extends JPanel implements Runnable{
         }
         g.setColor(Color.green);
         g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
+
+        g.setColor(Color.red);
+        g.fillOval(apple.getX(), apple.getY(), UNIT_SIZE, UNIT_SIZE);
+        g.dispose();
     }
 
     public void paintComponent(Graphics g){
