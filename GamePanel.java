@@ -14,11 +14,13 @@ public class GamePanel extends JPanel implements Runnable{
     private boolean gameOver;
     private Snake snake;
     private Apple apple;
+    private int bodySize;
     private char direction;
     private Thread gameThread;
 
     GamePanel(){
         direction = 'R';
+        bodySize = 3;
         gameOver = false;
         snake = new Snake(UNIT_SIZE);
         apple = new Apple(UNIT_SIZE);
@@ -57,14 +59,19 @@ public class GamePanel extends JPanel implements Runnable{
         snake.moveHead(direction, UNIT_SIZE);
     }
 
-    public void chechCollisions(){
-
+    public void checkCollisions(){
+        if(snake.getHeadX() == apple.getX() && snake.getHeadY() == apple.getY()){
+            bodySize++;
+            apple.newApple();
+        }
+        
     }
 
     @Override
     public void run() {
         while(!gameOver){
             move();
+            checkCollisions();
             repaint();
             try {
                 Thread.sleep(100);
