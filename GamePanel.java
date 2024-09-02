@@ -2,24 +2,29 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class GamePanel extends JPanel implements Runnable{
-    static final int SCREEN_WIDTH = 800;
-    static final int SCREEN_HEIGHT = 800;
-    static final int UNIT_SIZE = 25;
-    static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
-    boolean gameOver = false;
-    int bodySize = 5;
-    static int x = 0;
-    static int y = 0;
-    char direction = 'R';
-    Thread gameThread;
+    private static final int SCREEN_WIDTH = 800;
+    private static final int SCREEN_HEIGHT = 800;
+    private static final int UNIT_SIZE = 25;
+    private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
+    private boolean gameOver;
+    private Snake snake;
+    private char direction;
+    private Thread gameThread;
 
     GamePanel(){
+        direction = 'R';
+        gameOver = false;
+        snake = new Snake(UNIT_SIZE);
+
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
+        this.addKeyListener(new KeyHandler());
         startGameThread();
     }
 
@@ -34,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable{
             g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
         }
         g.setColor(Color.green);
-        g.fillRect(x, y, UNIT_SIZE, UNIT_SIZE);
+        g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
     }
 
     public void paintComponent(Graphics g){
@@ -43,20 +48,11 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void move(){
-        switch (direction) {
-            case 'D':
-                y = y + UNIT_SIZE;
-                break;
-            case 'U':
-                y = y - UNIT_SIZE;
-                break;
-            case 'L':
-                x = x - UNIT_SIZE;
-                break;
-            case 'R':
-                x = x + UNIT_SIZE;
-                break;
-        }
+        snake.moveHead(direction, UNIT_SIZE);
+    }
+
+    public void chechCollisions(){
+
     }
 
     @Override
@@ -68,6 +64,37 @@ public class GamePanel extends JPanel implements Runnable{
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public class KeyHandler extends KeyAdapter{
+
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if(direction != 'R'){
+                        direction = 'L';
+                    }
+                    break;
+            
+                case KeyEvent.VK_RIGHT:
+                    if(direction != 'L'){
+                        direction = 'R';
+                    }
+                    break;
+                
+                case KeyEvent.VK_UP:
+                    if(direction != 'D'){
+                        direction = 'U';
+                    }
+                    break;
+                
+                case KeyEvent.VK_DOWN:
+                    if(direction != 'U'){
+                        direction = 'D';
+                    }
+                    break;
             }
         }
     }
