@@ -4,19 +4,24 @@ public class Apple {
     private int x;
     private int y;
     private Random random;
-    private final int gameUnit;
+    private final int gameUnitX;
+    private final int gameUnitY;
+    private final int movementUnit;
 
-    public Apple(int unit) {
-        gameUnit = unit;
+    public Apple(int unitX, int unitY, int movUnit) {
+        gameUnitX = unitX / movUnit;
+        gameUnitY = unitY / movUnit;
+        movementUnit = movUnit;
         random = new Random();
-        x = random.nextInt(25) * gameUnit;
-        y = random.nextInt(25) * gameUnit;
     }
 
-    public void newApple() {
-        Random random = new Random();
-        x = random.nextInt(25) * gameUnit;
-        y =  random.nextInt(25) * gameUnit;
+    public void newApple(int snakeX, int snakeY) {
+        x = random.nextInt(gameUnitX) * movementUnit;
+        y =  random.nextInt(gameUnitY) * movementUnit;
+        while(x == snakeX && y == snakeY){
+            x = random.nextInt(gameUnitX) * movementUnit;
+            y =  random.nextInt(gameUnitY) * movementUnit;
+        }
     }
 
     public int getX() {
