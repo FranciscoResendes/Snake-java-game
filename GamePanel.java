@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable{
         gameOver = false;
         snake = new Snake(GAME_UNITS);
         apple = new Apple(SCREEN_WIDTH, SCREEN_HEIGHT, UNIT_SIZE);
-        apple.newApple(snake.getHeadX(), snake.getHeadY());
+        apple.newApple(snake.getBody());
 
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void checkCollisions(){
         if(snake.getHeadX() == apple.getX() && snake.getHeadY() == apple.getY()){
             bodySize++;
-            apple.newApple(snake.getHeadX(), snake.getHeadY());
+            apple.newApple(snake.getBody());
         }
         for (int i = 1; i < bodySize; i++){
             if(snake.getHeadX() == snake.getBody()[i][0] && snake.getHeadY() == snake.getBody()[i][1]){

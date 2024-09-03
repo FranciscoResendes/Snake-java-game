@@ -15,13 +15,22 @@ public class Apple {
         random = new Random();
     }
 
-    public void newApple(int snakeX, int snakeY) {
+    public void newApple(int[][] snakeBody){
         x = random.nextInt(gameUnitX) * movementUnit;
         y =  random.nextInt(gameUnitY) * movementUnit;
-        while(x == snakeX && y == snakeY){
+        while(!isValidPosition(snakeBody)){
             x = random.nextInt(gameUnitX) * movementUnit;
             y =  random.nextInt(gameUnitY) * movementUnit;
         }
+    }
+
+    public boolean isValidPosition(int[][] snakeBody){
+        for(int i = 0; i < snakeBody.length; i++){
+            if(x == snakeBody[i][0] && y == snakeBody[i][1]){
+                return false;
+            }
+        }
+        return true;
     }
 
     public int getX() {
