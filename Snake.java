@@ -3,7 +3,9 @@ public class Snake {
 
     public Snake(int size, int startPos) {
         this.body = new int[size][size];
-        this.body[0][1] = startPos;
+        for(int i = 0; i < size; i++){
+            this.body[i][1] = startPos;
+        }
     }
 
     public int getHeadX() {
