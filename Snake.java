@@ -1,9 +1,9 @@
 public class Snake {
     private final  int[][] body;
 
-    public Snake(int size) {
+    public Snake(int size, int startPos) {
         this.body = new int[size][size];
-        //thisbody[0][0] = ;
+        this.body[0][1] = startPos;
     }
 
     public int getHeadX() {
