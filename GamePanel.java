@@ -10,7 +10,6 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 800;
     private static final int UNIT_SIZE = 25;
-    private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
     private boolean gameOver;
     private Snake snake;
     private Apple apple;
@@ -64,7 +63,19 @@ public class GamePanel extends JPanel implements Runnable{
             bodySize++;
             apple.newApple();
         }
-        
+        //><
+        if(snake.getHeadX() < 0){
+            snake.setHeadX(SCREEN_WIDTH);
+        }
+        else if(snake.getHeadX() > SCREEN_WIDTH){
+            snake.setHeadX(0);
+        }
+        else if(snake.getHeadY() < 0){
+            snake.setHeadY(SCREEN_HEIGHT);
+        }
+        else if(snake.getHeadY() > SCREEN_HEIGHT){
+            snake.setHeadY(0);
+        }
     }
 
     @Override
@@ -113,3 +124,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
 }
+//Todo:
+// Game Over check and panel
+// Score during game
+// Thread to sleep after switching direction with key press
+// Fix bug where snake stays out of bounds if, after head is OfB but the neck isn't, you move the snake
