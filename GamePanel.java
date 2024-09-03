@@ -10,8 +10,8 @@ import java.awt.event.KeyEvent;
 public class GamePanel extends JPanel implements Runnable{
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 800;
-    private static final int UNIT_SIZE = 50;
-    private static final int INITIAL_SIZE = 10;
+    private static final int UNIT_SIZE = 25;
+    private static final int INITIAL_SIZE = 3;
     private static final char INITIAL_DIRECTION = 'R';
     private static final int GAME_UNITS = (SCREEN_WIDTH / UNIT_SIZE ) * (SCREEN_HEIGHT / UNIT_SIZE);
     private boolean gameOver;
@@ -20,11 +20,13 @@ public class GamePanel extends JPanel implements Runnable{
     private int bodySize;
     private char direction;
     private Thread gameThread;
+    private boolean cooldown;
 
     GamePanel(){
         direction = INITIAL_DIRECTION;
         bodySize = INITIAL_SIZE;
         gameOver = false;
+        cooldown = false;
         snake = new Snake(GAME_UNITS);
         apple = new Apple(SCREEN_WIDTH, SCREEN_HEIGHT, UNIT_SIZE);
         apple.newApple(snake.getBody());
@@ -48,7 +50,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
         g.setColor(Color.ORANGE);
         g.setFont(new Font("Courier New", Font.PLAIN, UNIT_SIZE));
-        g.drawString("Score", UNIT_SIZE- 5, UNIT_SIZE- 5);
+        g.drawString("Score: " + (bodySize - INITIAL_SIZE), UNIT_SIZE- 5, UNIT_SIZE- 5);
 
         g.setColor(Color.green);
         g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
@@ -82,6 +84,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void checkCollisions(){
+        
         if(snake.getHeadX() == apple.getX() && snake.getHeadY() == apple.getY()){
             bodySize++;
             apple.newApple(snake.getBody());
@@ -91,17 +94,22 @@ public class GamePanel extends JPanel implements Runnable{
                 gameOver = true;
             }
         }
+        cooldown = false;
         if(snake.getHeadX() < 0){
             snake.setHeadX(SCREEN_WIDTH);
+            cooldown = true;
         }
-        else if(snake.getHeadX() > SCREEN_WIDTH){
+        if(snake.getHeadX() > SCREEN_WIDTH){
             snake.setHeadX(0);
+            cooldown = true;
         }
-        else if(snake.getHeadY() < 0){
+        if(snake.getHeadY() < 0){
             snake.setHeadY(SCREEN_HEIGHT);
+            cooldown = true;
         }
-        else if(snake.getHeadY() > SCREEN_HEIGHT){
+        if(snake.getHeadY() > SCREEN_HEIGHT){
             snake.setHeadY(0);
+            cooldown = true;
         }
     }
 
@@ -128,37 +136,38 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public class KeyHandler extends KeyAdapter{
-
         public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
-                    if(direction != 'R'){
-                        direction = 'L';
-                    }
-                    break;
-            
-                case KeyEvent.VK_RIGHT:
-                    if(direction != 'L'){
-                        direction = 'R';
-                    }
-                    break;
+            if(!cooldown){
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        if(direction != 'R'){
+                            direction = 'L';
+                        }
+                        break;
                 
-                case KeyEvent.VK_UP:
-                    if(direction != 'D'){
-                        direction = 'U';
-                    }
-                    break;
-                
-                case KeyEvent.VK_DOWN:
-                    if(direction != 'U'){
-                        direction = 'D';
-                    }
-                    break;
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                    case KeyEvent.VK_RIGHT:
+                        if(direction != 'L'){
+                            direction = 'R';
+                        }
+                        break;
+                    
+                    case KeyEvent.VK_UP:
+                        if(direction != 'D'){
+                            direction = 'U';
+                        }
+                        break;
+                    
+                    case KeyEvent.VK_DOWN:
+                        if(direction != 'U'){
+                            direction = 'D';
+                        }
+                        break;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }
