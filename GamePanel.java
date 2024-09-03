@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 public class GamePanel extends JPanel implements Runnable{
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 800;
-    private static final int UNIT_SIZE = 25;
+    private static final int UNIT_SIZE = 50;
     private static final int INITIAL_SIZE = 10;
     private static final char INITIAL_DIRECTION = 'R';
     private static final int GAME_UNITS = (SCREEN_WIDTH / UNIT_SIZE ) * (SCREEN_HEIGHT / UNIT_SIZE);
@@ -46,6 +46,10 @@ public class GamePanel extends JPanel implements Runnable{
             g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
             g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
         }
+        g.setColor(Color.ORANGE);
+        g.setFont(new Font("Courier New", Font.PLAIN, UNIT_SIZE));
+        g.drawString("Score", UNIT_SIZE- 5, UNIT_SIZE- 5);
+
         g.setColor(Color.green);
         g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
 
