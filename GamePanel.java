@@ -1,10 +1,14 @@
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 public class GamePanel extends JPanel implements Runnable{
@@ -53,7 +57,12 @@ public class GamePanel extends JPanel implements Runnable{
         g.drawString("Score: " + (bodySize - INITIAL_SIZE), UNIT_SIZE- 5, UNIT_SIZE- 5);
 
         g.setColor(Color.green);
-        g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
+        try {
+            Image snakeHeadImage = ImageIO.read(new File("snakeHead.png"));
+            g.drawImage(snakeHeadImage, snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for(int i = 1; i < bodySize; i++){
             g.fillRect(snake.getBody()[i][0], snake.getBody()[i][1], UNIT_SIZE, UNIT_SIZE);
