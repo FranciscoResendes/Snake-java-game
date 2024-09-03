@@ -24,15 +24,17 @@ public class GamePanel extends JPanel implements Runnable{
     private int bodySize;
     private char direction;
     private Thread gameThread;
-    private boolean cooldown;
     private boolean paused;
+    private boolean menu;
+    private int difficulty;
 
     GamePanel(){
         direction = INITIAL_DIRECTION;
         bodySize = INITIAL_SIZE;
         gameOver = false;
-        cooldown = false;
         paused = false;
+        menu = true;
+        difficulty = 1;
         snake = new Snake(GAME_UNITS, UNIT_SIZE);
         apple = new Apple(SCREEN_WIDTH, SCREEN_HEIGHT, UNIT_SIZE);
         apple.newApple(snake.getBody());
@@ -50,29 +52,45 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void draw(Graphics g){
-        for(int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++){
-            g.drawLine(i * UNIT_SIZE, UNIT_SIZE, i * UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-        }
-        g.setColor(Color.ORANGE);
-        g.setFont(new Font("Courier New", Font.PLAIN, UNIT_SIZE));
-        g.drawString("Score: " + (bodySize - INITIAL_SIZE), UNIT_SIZE- 5, UNIT_SIZE- 5);
+        if (menu){
 
-        g.setColor(Color.green);
-        try {
-            Image snakeHeadImage = ImageIO.read(new File("snakeHead.png"));
-            g.drawImage(snakeHeadImage, snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE, null);
-        } catch (IOException e) {
-            e.printStackTrace();
+            g.setColor(Color.green);
+            g.setFont(new Font("Courier New", Font.PLAIN, 50));
+            g.drawString("Snake Game", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Snake Game")) / 2, SCREEN_HEIGHT / 2);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Courier New", Font.PLAIN, 20));
+            g.drawString("Game will start after choosing difficulty", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Game will start after choosing difficulty")) / 2, SCREEN_HEIGHT / 2 + 50);
+            g.drawString("(Press P to pause)", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("(Press P to pause)")) / 2, SCREEN_HEIGHT / 2 + 100);
+            g.drawString("Press 1 for easy", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Press 1 for easy")) / 2, SCREEN_HEIGHT / 2 + 150);
+            g.drawString("Press 2 for medium", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Press 2 for medium")) / 2, SCREEN_HEIGHT / 2 + 200);
+            g.drawString("Press 3 for hard", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Press 3 for hard")) / 2, SCREEN_HEIGHT / 2 + 250);
+            g.dispose();
         }
-
-        for(int i = 1; i < bodySize; i++){
-            g.fillRect(snake.getBody()[i][0], snake.getBody()[i][1], UNIT_SIZE, UNIT_SIZE);
+        else{
+            for(int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++){
+                g.drawLine(i * UNIT_SIZE, UNIT_SIZE, i * UNIT_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+            }
+            g.setColor(Color.ORANGE);
+            g.setFont(new Font("Courier New", Font.PLAIN, UNIT_SIZE));
+            g.drawString("Score: " + (bodySize - INITIAL_SIZE), UNIT_SIZE- 5, UNIT_SIZE- 5);
+    
+            g.setColor(Color.green);
+            try {
+                Image snakeHeadImage = ImageIO.read(new File("snakeHead.png"));
+                g.drawImage(snakeHeadImage, snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    
+            for(int i = 1; i < bodySize; i++){
+                g.fillRect(snake.getBody()[i][0], snake.getBody()[i][1], UNIT_SIZE, UNIT_SIZE);
+            }
+    
+            g.setColor(Color.red);
+            g.fillOval(apple.getX(), apple.getY(), UNIT_SIZE, UNIT_SIZE);
+            g.dispose();
         }
-
-        g.setColor(Color.red);
-        g.fillOval(apple.getX(), apple.getY(), UNIT_SIZE, UNIT_SIZE);
-        g.dispose();
     }
 
     public void paintComponent(Graphics g){
@@ -105,22 +123,18 @@ public class GamePanel extends JPanel implements Runnable{
                 gameOver = true;
             }
         }
-        cooldown = false;
+
         if(snake.getHeadX() < 0){
             snake.setHeadX(SCREEN_WIDTH);
-            cooldown = true;
         }
         if(snake.getHeadX() > SCREEN_WIDTH){
             snake.setHeadX(0);
-            cooldown = true;
         }
         if(snake.getHeadY() < UNIT_SIZE){
             snake.setHeadY(SCREEN_HEIGHT);
-            cooldown = true;
         }
         if(snake.getHeadY() > SCREEN_HEIGHT){
             snake.setHeadY(UNIT_SIZE);
-            cooldown = true;
         }
     }
 
@@ -139,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable{
                 move();
                 checkCollisions();       
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(200 / difficulty);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -180,6 +194,24 @@ public class GamePanel extends JPanel implements Runnable{
                             paused = false;
                         }else{
                             paused = true;
+                        }
+                        break;
+                    case KeyEvent.VK_1:
+                        if(menu){
+                            difficulty = 1;
+                            menu = false;                     
+                        }
+                        break;
+                    case KeyEvent.VK_2:
+                        if(menu){
+                            difficulty = 2;
+                            menu = false;
+                        }
+                        break;
+                    case KeyEvent.VK_3:
+                        if(menu){
+                            difficulty = 3;
+                            menu = false;
                         }
                         break;
                 }
