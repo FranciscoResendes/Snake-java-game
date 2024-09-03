@@ -1,6 +1,7 @@
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -101,9 +102,10 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameOver(Graphics g){
         g.setColor(Color.red);
-        g.setFont(getFont().deriveFont(40f));
+        g.setFont(new Font("Courier New", Font.PLAIN, 50));
         g.drawString("Game Over", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
         g.drawString(("Score: " + (bodySize - INITIAL_SIZE)), (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Score: " + bodySize)) / 2, SCREEN_HEIGHT / 2 + 50);
+        g.dispose();
     }
 
     @Override
@@ -148,6 +150,11 @@ public class GamePanel extends JPanel implements Runnable{
                     }
                     break;
             }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -158,3 +165,4 @@ public class GamePanel extends JPanel implements Runnable{
 // Thread to sleep after switching direction with key press
 // Fix bug where snake stays out of bounds if, after head is OfB but the neck isn't, you move the snake
 // Fix size of snake body array
+// Apple has to be generated in a position that is not occupied by the snake
