@@ -10,6 +10,9 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 800;
     private static final int UNIT_SIZE = 25;
+    private static final int INITIAL_SIZE = 10;
+    private static final char INITIAL_DIRECTION = 'R';
+    private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE * UNIT_SIZE);
     private boolean gameOver;
     private Snake snake;
     private Apple apple;
@@ -18,8 +21,8 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread gameThread;
 
     GamePanel(){
-        direction = 'R';
-        bodySize = 3;
+        direction = INITIAL_DIRECTION;
+        bodySize = INITIAL_SIZE;
         gameOver = false;
         snake = new Snake(UNIT_SIZE);
         apple = new Apple(UNIT_SIZE);
@@ -55,7 +58,12 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        draw(g);
+        
+        if(!gameOver){
+            draw(g);
+        }else{
+            gameOver(g);
+        }
     }
 
     public void move(){
@@ -72,7 +80,11 @@ public class GamePanel extends JPanel implements Runnable{
             bodySize++;
             apple.newApple();
         }
-        //><
+        for (int i = 1; i < bodySize; i++){
+            if(snake.getHeadX() == snake.getBody()[i][0] && snake.getHeadY() == snake.getBody()[i][1]){
+                gameOver = true;
+            }
+        }
         if(snake.getHeadX() < 0){
             snake.setHeadX(SCREEN_WIDTH);
         }
@@ -85,6 +97,13 @@ public class GamePanel extends JPanel implements Runnable{
         else if(snake.getHeadY() > SCREEN_HEIGHT){
             snake.setHeadY(0);
         }
+    }
+
+    public void gameOver(Graphics g){
+        g.setColor(Color.red);
+        g.setFont(getFont().deriveFont(40f));
+        g.drawString("Game Over", (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+        g.drawString(("Score: " + (bodySize - INITIAL_SIZE)), (SCREEN_WIDTH - g.getFontMetrics().stringWidth("Score: " + bodySize)) / 2, SCREEN_HEIGHT / 2 + 50);
     }
 
     @Override
@@ -138,3 +157,4 @@ public class GamePanel extends JPanel implements Runnable{
 // Score during game
 // Thread to sleep after switching direction with key press
 // Fix bug where snake stays out of bounds if, after head is OfB but the neck isn't, you move the snake
+// Fix size of snake body array
