@@ -7,39 +7,39 @@ public class Snake {
     }
 
     public int getHeadX() {
-        return body[0][0];
+        return this.body[0][0];
     }
 
     public Integer getHeadY() {
-        return body[0][1];
+        return this.body[0][1];
     }
 
     public void setHeadX(int x) {
-        body[0][0] = x;
+        this.body[0][0] = x;
     }
 
     public void setHeadY(int y) {
-        body[0][1] = y;
+        this.body[0][1] = y;
     }
 
     public int[][] getBody() {
-        return body;
+        return this.body;
     }
 
     public void moveHead(char direction, int distance) {
         switch (direction) {
             
             case 'D':
-                body[0][1] += distance;
+                this.body[0][1] += distance;
                 break;
             case 'U':
-                body[0][1] -= distance;
+                this.body[0][1] -= distance;
                 break;
             case 'L':
-                body[0][0] -= distance;
+                this.body[0][0] -= distance;
                 break;
             case 'R':
-                body[0][0] += distance;
+                this.body[0][0] += distance;
                 break;
         }
 

@@ -9,24 +9,24 @@ public class Apple {
     private final int movementUnit;
 
     public Apple(int unitX, int unitY, int movUnit) {
-        gameUnitX = unitX / movUnit;
-        gameUnitY = unitY / movUnit;
-        movementUnit = movUnit;
-        random = new Random();
+        this.gameUnitX = unitX / movUnit;
+        this.gameUnitY = unitY / movUnit;
+        this.movementUnit = movUnit;
+        this.random = new Random();
     }
 
     public void newApple(int[][] snakeBody){
-        x = random.nextInt(gameUnitX) * movementUnit;
-        y =  random.nextInt(gameUnitY) * movementUnit;
+        this.x = random.nextInt(gameUnitX) * movementUnit;
+        this.y =  (random.nextInt(gameUnitY -1 ) + 1) * movementUnit;
         while(!isValidPosition(snakeBody)){
-            x = random.nextInt(gameUnitX) * movementUnit;
-            y =  random.nextInt(gameUnitY) * movementUnit;
+            this.x = random.nextInt(gameUnitX) * movementUnit;
+            this.y =  (random.nextInt(gameUnitY -1 ) + 1) * movementUnit;
         }
     }
 
     public boolean isValidPosition(int[][] snakeBody){
         for(int i = 0; i < snakeBody.length; i++){
-            if(x == snakeBody[i][0] && y == snakeBody[i][1]){
+            if(this.x == snakeBody[i][0] && this.y == snakeBody[i][1]){
                 return false;
             }
         }
@@ -34,11 +34,11 @@ public class Apple {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
     
 }
