@@ -44,6 +44,10 @@ public class GamePanel extends JPanel implements Runnable{
         g.setColor(Color.green);
         g.fillRect(snake.getHeadX(), snake.getHeadY(), UNIT_SIZE, UNIT_SIZE);
 
+        for(int i = 1; i < bodySize; i++){
+            g.fillRect(snake.getBody()[i][0], snake.getBody()[i][1], UNIT_SIZE, UNIT_SIZE);
+        }
+
         g.setColor(Color.red);
         g.fillOval(apple.getX(), apple.getY(), UNIT_SIZE, UNIT_SIZE);
         g.dispose();
@@ -55,6 +59,11 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void move(){
+        for(int i = bodySize; i > 0; i--){
+            snake.getBody()[i][0] = snake.getBody()[i - 1][0];
+            snake.getBody()[i][1] = snake.getBody()[i - 1][1];
+        }
+
         snake.moveHead(direction, UNIT_SIZE);
     }
 
