@@ -25,12 +25,14 @@ public class GamePanel extends JPanel implements Runnable{
     private char direction;
     private Thread gameThread;
     private boolean cooldown;
+    private boolean paused;
 
     GamePanel(){
         direction = INITIAL_DIRECTION;
         bodySize = INITIAL_SIZE;
         gameOver = false;
         cooldown = false;
+        paused = false;
         snake = new Snake(GAME_UNITS, UNIT_SIZE);
         apple = new Apple(SCREEN_WIDTH, SCREEN_HEIGHT, UNIT_SIZE);
         apple.newApple(snake.getBody());
@@ -133,20 +135,22 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         while(!gameOver){
-            move();
-            checkCollisions();
-            repaint();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(!paused){
+                move();
+                checkCollisions();       
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            repaint();
         }
     }
 
     public class KeyHandler extends KeyAdapter{
         public void keyPressed(KeyEvent e) {
-            if(!cooldown){
+
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
                         if(direction != 'R'){
@@ -171,13 +175,20 @@ public class GamePanel extends JPanel implements Runnable{
                             direction = 'D';
                         }
                         break;
+                    case KeyEvent.VK_P:
+                        if(paused){
+                            paused = false;
+                        }else{
+                            paused = true;
+                        }
+                        break;
                 }
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            }
+            
         }
     }
 
